@@ -28,7 +28,6 @@ ACCEPTABLE_Y_ERROR = 60
 
 # Define command line arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-v", "--video", help="path to the optional video file")
 ap.add_argument("-c", "--camera_index", type=int, default=0, help="the camera index number (/dev/video____). Run 'v4l2-ctl --list-devices' to check.")
 ap.add_argument("-w", "--processing_width", type=int, default=RESIZE_PROCESSING_WIDTH, help="the width to resize each frame for processing")
 ap.add_argument("-x", "--resolution_width", type=int, default=960, help="the webcam resolution width to capture")
