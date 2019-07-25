@@ -20,7 +20,7 @@ Specifics are highly variable, depending on your rig. This guide is largely simi
 
 In step 4, I used the following cmake command:
 ```shell
-$> cmake -D CMAKE_BUILD_TYPE=RELEASE \                                    
+$ cmake -D CMAKE_BUILD_TYPE=RELEASE \                                    
         -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D INSTALL_PYTHON_EXAMPLES=ON \
         -D INSTALL_C_EXAMPLES=ON \
@@ -59,7 +59,7 @@ OpenCV finds the mask of objects you want and determines appropriate action in *
 Once everything is setup and on, the tracking is initiated by feeding *camera_tracker.py* to the Python 3 interpreter.
 Example from Linux terminal within working directory containing files:
 ```shell
-$> python3 camera_tracker.py
+$ python3 camera_tracker.py
 ```
 
 The *camera_tracker.py* script accepts 4 arguments.
@@ -71,9 +71,9 @@ The *camera_tracker.py* script accepts 4 arguments.
 
 Two examples from Linux terminal within working directory containing files specifying all 4 arguments using shorthand and longhand notation.
 ```shell
-$> python3 camera_tracker.py --camera_index 4 --processing_width 800 --resolution_width 960 --resolution_height 540
+$ python3 camera_tracker.py --camera_index 4 --processing_width 800 --resolution_width 960 --resolution_height 540
 
-$> python3 camera_tracker.py -c4 -w800 -x960 -y540
+$ python3 camera_tracker.py -c4 -w800 -x960 -y540
 ```
 
 You will likely want to tweak argument defaults, defined within *camera_tracker.py*, to suit your situation once you've determined optimal conditions. Defaults are setup to match my situation and likely won't work for you out of the gate.
