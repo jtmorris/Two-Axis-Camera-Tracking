@@ -19,8 +19,8 @@ This repository contains the Python and Arduino code written to execute this pro
 Specifics are highly variable, depending on your rig. This guide is largely similar to the setup procedure I used: https://web.archive.org/save/https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/. I installed XUbuntu 19.04 on an external hard drive connected to my Microsoft Surface Pro 3, then executed installation of OpenCV and requisites largely recreating the steps outlined in that article with the following caveats and adjustments.
 
 In step 4, I used the following cmake command:
-```
-cmake -D CMAKE_BUILD_TYPE=RELEASE \                                    
+```shell
+$> cmake -D CMAKE_BUILD_TYPE=RELEASE \                                    
         -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D INSTALL_PYTHON_EXAMPLES=ON \
         -D INSTALL_C_EXAMPLES=ON \
@@ -58,7 +58,7 @@ OpenCV finds the mask of objects you want and determines appropriate action in *
 ## Running the Project
 Once everything is setup and on, the tracking is initiated by feeding *camera_tracker.py* to the Python 3 interpreter.
 Example from Linux terminal within working directory containing files:
-```
+```shell
 $> python3 camera_tracker.py
 ```
 
@@ -70,7 +70,7 @@ The *camera_tracker.py* script accepts 4 arguments.
 - **-y / --resolution_height**: The height corresponding to the above *--resolution_width*. Same caveats apply. Defaults to 540.
 
 Two examples from Linux terminal within working directory containing files specifying all 4 arguments using shorthand and longhand notation.
-```
+```shell
 $> python3 camera_tracker.py --camera_index 4 --processing_width 800 --resolution_width 960 --resolution_height 540
 
 $> python3 camera_tracker.py -c4 -w800 -x960 -y540
