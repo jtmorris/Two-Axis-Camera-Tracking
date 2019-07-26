@@ -8,6 +8,10 @@ Utilizing a webcam and computer vision techniques, I sought to track an object i
 
 This repository contains the Python and Arduino code written to execute this project. 
 
+<p align="center">
+        <img src="resources/camera_view.gif">
+</p>
+
 ## Prerequisites
 - A computer with Python 3, [NumPy](https://pypi.org/project/numpy/), OpenCV, and [imutils](https://pypi.org/project/imutils/) installed. Computer requires a USB port for camera input and a USB port for serial communication with Arduino. *(Project developed using OpenCV 4.1.0 on 64-bit XUbuntu 19.04 running Python 3.7.)*
 - An Arduino microcontroller with at least 8 available digital output pins and a USB cable. *(Project used an Arduino Mega2560 R3.)*
