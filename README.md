@@ -3,7 +3,7 @@
         <img src="resources/mechanism_in_action.gif">
 </p>
 
-*View of the tracking mechanism in action. Camera is tracking a suspended pink Post-It swinging behind the camera filming.*
+*View of the tracking mechanism in action. Camera is tracking a suspended pink Post-It swinging behind the camera filming. A longer video of the mechanism in action can be found here: https://www.bitchute.com/video/jbJDwrpSroNH/*
 
 ## Theory and Methods
 Utilizing a webcam and computer vision techniques, I sought to track an object in 3D space utilizing a two degree of freedom motorized mechanism. I opted to use the OpenCV computer vision library and Python 3 for computer vision. I opted for two stepper motors controlled by an Arduino and L298N dual H-bridge motor controllers. The communication between the computer (Python) and the Arduino would occur over a serial connection using mutually known flag characters (ASCII integers 1 through 4) sent from Python, over USB, to indicate which motor to move and and which direction.
