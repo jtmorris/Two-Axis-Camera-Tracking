@@ -47,7 +47,7 @@ $ cmake -D CMAKE_BUILD_TYPE=RELEASE \
         -D OPENCV_EXTRA_MODULES_PATH=\~/opencv_contrib/modules \
         -D PYTHON_EXECUTABLE=\~/.virtualenvs/cv/bin/python \
         -D BUILD_EXAMPLES=ON \
-        -D BUILD_DOCS=ON
+        -D BUILD_DOCS=ON \
         -D OPENCV_GENERATE_PKGCONFIG=ON ..
 ```
  
