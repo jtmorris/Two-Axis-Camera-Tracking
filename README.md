@@ -3,10 +3,10 @@
         <img src="resources/mechanism_in_action.gif">
 </p>
 
-*View of the tracking mechanism in action. Camera is tracking a suspended pink Post-It swinging behind the camera filming. A longer video of the mechanism in action can be found here: https://www.bitchute.com/video/jbJDwrpSroNH/*
+*View of the tracking mechanism in action. Camera is tracking a suspended pink Post-It swinging behind the filming camera. A longer video of the mechanism in action can be found here: https://www.bitchute.com/video/jbJDwrpSroNH/*
 
 ## Theory and Methods
-Utilizing a webcam and computer vision techniques, I sought to track an object in 3D space utilizing a two degree of freedom motorized mechanism. I opted to use the OpenCV computer vision library and Python 3 for computer vision. I opted for two stepper motors controlled by an Arduino and L298N dual H-bridge motor controllers. The communication between the computer (Python) and the Arduino would occur over a serial connection using mutually known flag characters (ASCII integers 1 through 4) sent from Python, over USB, to indicate which motor to move and and which direction.
+Utilizing a webcam and computer vision techniques, I sought to track an object in 3D space utilizing a two degree of freedom motorized mechanism. I opted to use the OpenCV computer vision library and Python 3 for computer vision. I opted for two stepper motors controlled by an Arduino and L298N dual H-bridge motor controllers. The communication between the computer (Python) and the Arduino would occur over a serial connection using mutually known flag characters, ASCII integers 1 through 4, sent from Python, over USB, to indicate which motor to move and and which direction.
 
 This repository contains the Python and Arduino code written to execute this project. 
 
@@ -35,33 +35,33 @@ This repository contains the Python and Arduino code written to execute this pro
 
 ## Setup
 ### Computer
-Specifics are highly variable, depending on your rig. This guide is largely similar to the setup procedure I used: https://web.archive.org/save/https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/. I installed XUbuntu 19.04 on an external hard drive connected to my Microsoft Surface Pro 3, then executed installation of OpenCV and requisites largely recreating the steps outlined in that article with the following caveats and adjustments.
+Specifics are highly variable, depending on your rig. I installed XUbuntu 19.04 on an external hard drive connected to my Microsoft Surface Pro 3, then executed installation of OpenCV and other software requisites. If using Ubuntu, or similar, this guide presents a more than sufficient set of instructions for compiling and installing OpenCV: https://web.archive.org/save/https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/. During my setup, I deviated from the above setup in the following ways and results differed in the following ways:
 
-In step 4, I used the following cmake command:
-```shell
-$ cmake -D CMAKE_BUILD_TYPE=RELEASE \                                    
-        -D CMAKE_INSTALL_PREFIX=/usr/local \
-        -D INSTALL_PYTHON_EXAMPLES=ON \
-        -D INSTALL_C_EXAMPLES=ON \
-        -D OPENCV_ENABLE_NONFREE=ON \
-        -D OPENCV_EXTRA_MODULES_PATH=\~/opencv_contrib/modules \
-        -D PYTHON_EXECUTABLE=\~/.virtualenvs/cv/bin/python \
-        -D BUILD_EXAMPLES=ON \
-        -D BUILD_DOCS=ON \
-        -D OPENCV_GENERATE_PKGCONFIG=ON ..
-```
+- I used the following cmake command, as opposed to that given in step 4:
+   ```shell
+   $ cmake -D CMAKE_BUILD_TYPE=RELEASE \                                    
+           -D CMAKE_INSTALL_PREFIX=/usr/local \
+           -D INSTALL_PYTHON_EXAMPLES=ON \
+           -D INSTALL_C_EXAMPLES=ON \
+           -D OPENCV_ENABLE_NONFREE=ON \
+           -D OPENCV_EXTRA_MODULES_PATH=\~/opencv_contrib/modules \
+           -D PYTHON_EXECUTABLE=\~/.virtualenvs/cv/bin/python \
+           -D BUILD_EXAMPLES=ON \
+           -D BUILD_DOCS=ON \
+           -D OPENCV_GENERATE_PKGCONFIG=ON ..
+   ```
  
-pkg-config check at the end of step 4 will fail. Everything works anyway, so don't worry about it. Just skip it.
+- pkg-config check indicated at the end of step 4 will return an error. OpenCV worked just fine despite it.
  
  
-In step 5, with (X)Ubuntu 19.04, the path is `/usr/local/lib/python<*your version here*>/site-packages/cv2/python-<*your version here*>/`, not `/usr/local/python/cv2/python-3.6`.
+- With (X)Ubuntu 19.04, the paths to Python listed in step 5 are `/usr/local/lib/python<*your version here*>/site-packages/cv2/python-<*your version here*>/`, not `/usr/local/python/cv2/python-3.6`.
 
 ### Arduino
-- Wire stepper motors to Arduino and power supply to motor controllers. (Handy starter guide to motor wiring if you're unfamiliar: https://web.archive.org/web/20190725070024/https://www.makerguides.com/l298n-stepper-motor-arduino-tutorial/)
-- Edit the *serial_triggered_control.ino* code to reference the digital pins you wired to and motor variables.
+- Wire stepper motors to Arduino and power supply to motor controllers. (If unfamiliar with L298N wiring, an introductory guide can be found here: https://web.archive.org/web/20190725070024/https://www.makerguides.com/l298n-stepper-motor-arduino-tutorial/)
+- Edit the *[serial_triggered_control.ino](serial_triggered_control.ino)* code to reference the digital pins you wired to and motor variables.
    - Relevant variables are near top of file, named STEPPER_<*motor plane*>_<*pin #*>.
    - If different stepper motors are used, STEPPER_STEPS_PER_REV as well as STEPPER_SPEED may also need adjusting.
-- Compile and upload the Arduino script *serial_triggered_control.ino* to your Arduino.
+- Compile and upload the Arduino script *[serial_triggered_control.ino](serial_triggered_control.ino)* to your Arduino.
 - Leave Arduino plugged into your computer via USB to enable serial communication necessary for motor control.
 
 ### Mechanism Setup
@@ -74,18 +74,20 @@ The idea is to have a horizontal plane of tracking controlled by one motor. The 
 Any number of modifications or alterations can be made. You simply need the motors controlling 2-axes of rotation independently, one parallel to the camera FOV orientation, one perpendicular to the camera FOV orientation.
 
 ### Computer Vision Setup
-In its current state, the program tracks a [pink Post-It](https://amzn.to/2Yb1Oby), as it was easily distiguishable from the background where I tested. Detection is done using a range of HSV colors determined through experimentation to match colors in my specific lighting conditions while narrow enough to reject false positives. You will likely need to experiment to detect the object you wish to detect. Specifics are highly variable to your circumstances and desires.
+In its current state, the program tracks a [pink Post-It](https://amzn.to/2Yb1Oby), as it was easily distiguishable from the background where I tested. Detection is done using a range of HSV colors, narrow enough to reject false positives, determined through experimentation. You will likely need to experiment to detect the object you wish to detect. Specifics are highly variable to your circumstances and desires.
 
-OpenCV finds the mask of objects you want and determines appropriate action in *camera_tracker.py*. Have fun.
+Once found, the distance of the centroid of the detected contour from the center of the camera frame is calculated. If the distance is beyond a certain buffer zone, the appropriate motor(s) are triggered to move one interval in the desired direction. By default, as defined in the Arduino code, one movement interval is one step of the motor.
+
+Detection and determination of desired motor activity is accomplished in *[camera_tracker.py](camera_tracker.py)*.
 
 ## Running the Project
-Once everything is setup and on, the tracking is initiated by feeding *camera_tracker.py* to the Python 3 interpreter.
+Once everything is setup and on, the tracking is initiated by feeding *[camera_tracker.py](camera_tracker.py)* to the Python 3 interpreter.
 Example from Linux terminal within working directory containing files:
 ```shell
 $ python3 camera_tracker.py
 ```
 
-The *camera_tracker.py* script accepts 4 arguments.
+The *[camera_tracker.py](camera_tracker.py)* script accepts 4 arguments.
 
 - **-c / --camera_index**: If using a Linux or Mac system, USB cameras are accessed by "/dev/video<*camera index #*>". This argument is that index #. By default, the script assumes camera index 0 (/dev/video0). If your system has multiple cameras, you may need to reference a different device. If using Windows or some other system, the webcam stream code will need to be altered to use appropriate formatting and notation.
 - **-w / --processing_width**: Manually override the default frame size used for processing object detection. Larger frames offer more space and higher quality, but require more processing power. Lowering this number will yield faster results. By default, it is 800 pixels, which was determined to yield 30 to 40 frames per second on my computer with displaying of each frame and the detected mask each iteration.
@@ -119,4 +121,4 @@ You will likely want to tweak argument defaults, defined within *camera_tracker.
 - OpenCV uses a strange scale variant of the HSV color space, different from other software scales I've encountered. Coupled with the BGR, rather than RGB color space, it took longer to determine suitable HSV color ranges for masking than I would have preferred because of the need to convert, transpose, and rectify scales and systems. While simple enough, it was the most annoying part of the project beyond VirtualBox.
    > "For HSV, Hue range is [0,179], Saturation range is [0,255] and Value range is [0,255]. Different softwares use different scales. So if you are comparing OpenCV values with them, you need to normalize these ranges." 
    > \- [OpenCV Docs](https://docs.opencv.org/3.2.0/df/d9d/tutorial_py_colorspaces.html)
-- I learned about myself that I don't have much desire for pink objects laying about in my space. Made for convenient object detection with a pink Post-It.
+- I learned about myself that I don't have much desire for pink objects laying about in my space. This aversion of pink made for convenient object detection with a pink Post-It.
