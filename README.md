@@ -8,29 +8,29 @@
 ## Theory and Methods
 Utilizing a webcam and computer vision techniques, I sought to track an object in 3D space utilizing a two degree of freedom motorized mechanism. I opted to use the OpenCV computer vision library and Python 3 for computer vision. I opted for two stepper motors controlled by an Arduino and L298N dual H-bridge motor controllers. The communication between the computer (Python) and the Arduino would occur over a serial connection using mutually known flag characters (ASCII integers 1 through 4) sent from Python, over USB, to indicate which motor to move and and which direction.
 
-This repository contains the Python and Arduino code written to execute this project. 
+This repository contains the Python and Arduino code written to execute this project.
 
 <p align="center">
-        <img src="resources/camera_view.gif">        
+        <img src="resources/camera_view.gif">
 </p>
 
 *View from the camera being articulated to track a pink Post-It (top). A yellow circle is imposed around the contour of the detected object and a red dot is imposed indicating the calculated centroid of the contour. Additionally shown is the mask of the camera view containing the object to track after computer vision selection techniques have been applied (bottom).*
 
 ## Prerequisites
-- A computer with Python 3, [NumPy](https://pypi.org/project/numpy/), OpenCV, and [imutils](https://pypi.org/project/imutils/) installed. Computer requires a USB port for camera input and a USB port for serial communication with Arduino. 
+- A computer with Python 3, [NumPy](https://pypi.org/project/numpy/), OpenCV, and [imutils](https://pypi.org/project/imutils/) installed. Computer requires a USB port for camera input and a USB port for serial communication with Arduino.
    - *(Project developed using OpenCV 4.1.0 on 64-bit XUbuntu 19.04 running Python 3.7.)*
-- An Arduino microcontroller with at least 8 available digital output pins and a USB cable. 
+- An Arduino microcontroller with at least 8 available digital output pins and a USB cable.
    - *(Project used an Arduino Mega2560 R3.)*
-- A USB video camera. 
+- A USB video camera.
    - *(Project used a Logitech C920 HD webcam.)*
-- Two stepper motors. 
+- Two stepper motors.
    - *(Project used generic Nema 17 motors.)*
-- Two stepper motor controllers capable of interfacing with the Arduino Stepper.h library. 
+- Two stepper motor controllers capable of interfacing with the Arduino Stepper.h library.
    - *(Project used two L298N dual H-bridge motor controllers.)*
-- 12 to 48 volt power source for driving motors and motor controller. 
+- 12 to 48 volt power source for driving motors and motor controller.
    - *(Project used a DC power supply providing 24 volts.)*
 - Electrical project basics, such as jump wires and breadboards.
-- Sufficient motor linkages and connections. 
+- Sufficient motor linkages and connections.
    - *(Project used 1/2 inch square dowel rods and relevant fasteners. (see pictures above and below))*
 
 ## Setup
@@ -39,7 +39,7 @@ Specifics are highly variable, depending on your rig. This guide is largely simi
 
 In step 4, I used the following cmake command:
 ```shell
-$ cmake -D CMAKE_BUILD_TYPE=RELEASE \                                    
+$ cmake -D CMAKE_BUILD_TYPE=RELEASE \
         -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D INSTALL_PYTHON_EXAMPLES=ON \
         -D INSTALL_C_EXAMPLES=ON \
@@ -50,23 +50,23 @@ $ cmake -D CMAKE_BUILD_TYPE=RELEASE \
         -D BUILD_DOCS=ON \
         -D OPENCV_GENERATE_PKGCONFIG=ON ..
 ```
- 
+
 pkg-config check at the end of step 4 will fail. Everything works anyway, so don't worry about it. Just skip it.
- 
- 
+
+
 In step 5, with (X)Ubuntu 19.04, the path is `/usr/local/lib/python<*your version here*>/site-packages/cv2/python-<*your version here*>/`, not `/usr/local/python/cv2/python-3.6`.
 
 ### Arduino
 - Wire stepper motors to Arduino and power supply to motor controllers. (Handy starter guide to motor wiring if you're unfamiliar: https://web.archive.org/web/20190725070024/https://www.makerguides.com/l298n-stepper-motor-arduino-tutorial/)
-- Edit the *serial_triggered_control.ino* code to reference the digital pins you wired to and motor variables.
+- Edit the *src/arduino_motor_controller/serial_triggered_control.ino* code to reference the digital pins you wired to and motor variables.
    - Relevant variables are near top of file, named STEPPER_<*motor plane*>_<*pin #*>.
    - If different stepper motors are used, STEPPER_STEPS_PER_REV as well as STEPPER_SPEED may also need adjusting.
-- Compile and upload the Arduino script *serial_triggered_control.ino* to your Arduino.
+- Compile and upload the Arduino script *src/arduino_motor_controller/serial_triggered_control.ino* to your Arduino.
 - Leave Arduino plugged into your computer via USB to enable serial communication necessary for motor control.
 
 ### Mechanism Setup
 <p align="center">
-        <img src="resources/mechanism_close_up.jpg">        
+        <img src="resources/mechanism_close_up.jpg">
 </p>
 
 The idea is to have a horizontal plane of tracking controlled by one motor. The output shaft of that motor is attached to a second motor controlling the vertial plane of tracking. Attached to that motor output shaft is the camera. I simply used short pieces of 1/2 inch wooden square dowel rod press fit onto each motor shaft via drilled holes. The vertical plane motor was then attached to the horizontal output shaft dowel using machine screws through the dowel into the motor mount points. The camera was mounted to the vertical plane output shaft dowel using a [setup stud](https://www.mcmaster.com/90281a095) with threads matching the camera tripod attachment fitting.
@@ -76,16 +76,16 @@ Any number of modifications or alterations can be made. You simply need the moto
 ### Computer Vision Setup
 In its current state, the program tracks a [pink Post-It](https://amzn.to/2Yb1Oby), as it was easily distiguishable from the background where I tested. Detection is done using a range of HSV colors determined through experimentation to match colors in my specific lighting conditions while narrow enough to reject false positives. You will likely need to experiment to detect the object you wish to detect. Specifics are highly variable to your circumstances and desires.
 
-OpenCV finds the mask of objects you want and determines appropriate action in *camera_tracker.py*. Have fun.
+OpenCV finds the mask of objects you want and determines appropriate action in *src/camera_tracker.py*. Have fun.
 
 ## Running the Project
 Once everything is setup and on, the tracking is initiated by feeding *camera_tracker.py* to the Python 3 interpreter.
-Example from Linux terminal within working directory containing files:
+Example from Linux terminal within the project src directory containing files:
 ```shell
 $ python3 camera_tracker.py
 ```
 
-The *camera_tracker.py* script accepts 4 arguments.
+The *src/camera_tracker.py* script accepts 4 arguments.
 
 - **-c / --camera_index**: If using a Linux or Mac system, USB cameras are accessed by "/dev/video<*camera index #*>". This argument is that index #. By default, the script assumes camera index 0 (/dev/video0). If your system has multiple cameras, you may need to reference a different device. If using Windows or some other system, the webcam stream code will need to be altered to use appropriate formatting and notation.
 - **-w / --processing_width**: Manually override the default frame size used for processing object detection. Larger frames offer more space and higher quality, but require more processing power. Lowering this number will yield faster results. By default, it is 800 pixels, which was determined to yield 30 to 40 frames per second on my computer with displaying of each frame and the detected mask each iteration.
@@ -99,7 +99,7 @@ $ python3 camera_tracker.py --camera_index 4 --processing_width 800 --resolution
 $ python3 camera_tracker.py -c4 -w800 -x960 -y540
 ```
 
-You will likely want to tweak argument defaults, defined within *camera_tracker.py*, to suit your situation once you've determined optimal conditions. Defaults are setup to match my situation and likely won't work for you out of the gate.
+You will likely want to tweak argument defaults, defined within *src/camera_tracker.py*, to suit your situation once you've determined optimal conditions. Defaults are setup to match my situation and likely won't work for you out of the gate.
 
 ---
 
@@ -117,6 +117,6 @@ You will likely want to tweak argument defaults, defined within *camera_tracker.
 - I learned a few tricks for object detection within an image regarding blurring, eroding, and dilating to eliminate false positive and artificating. https://www.pyimagesearch.com/ is one of several great resources that helped me net improved object detection. I initially tracked a green Post-It, and would get artifacts from shadows cast on the background wall and wall hangings before blurring, eroding, and dilating as I did in the end. A pink Post-It was less prone to false positives; however, I kept in a softened version of the mask alterations anyway.
 - I initially attempted to execute this project in a Linux virtual machine using VirtualBox on my Windows desktop PC. Many, many problems ensued with getting the webcam to work at all, and the throughput made for an abysmal framerate. Don't bother with a virtual machine if your camera gives you any headaches. Stick with the bare metal. A Raspberry Pi would work well, though compilation of OpenCV takes a long time. I opted for my quite speedy Surface Pro 3 tablet.
 - OpenCV uses a strange scale variant of the HSV color space, different from other software scales I've encountered. Coupled with the BGR, rather than RGB color space, it took longer to determine suitable HSV color ranges for masking than I would have preferred because of the need to convert, transpose, and rectify scales and systems. While simple enough, it was the most annoying part of the project beyond VirtualBox.
-   > "For HSV, Hue range is [0,179], Saturation range is [0,255] and Value range is [0,255]. Different softwares use different scales. So if you are comparing OpenCV values with them, you need to normalize these ranges." 
+   > "For HSV, Hue range is [0,179], Saturation range is [0,255] and Value range is [0,255]. Different softwares use different scales. So if you are comparing OpenCV values with them, you need to normalize these ranges."
    > \- [OpenCV Docs](https://docs.opencv.org/3.2.0/df/d9d/tutorial_py_colorspaces.html)
 - I learned about myself that I don't have much desire for pink objects laying about in my space. Made for convenient object detection with a pink Post-It.
